@@ -1,0 +1,10 @@
+https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html#gisette
+gisette
+Source: NIPS 2003 Feature Selection Challenge [IG05a]
+Preprocessing: The data set is also available at UCI. Because the labels of testing set are not available, here we use the validation set (gisette_valid.data and gisette_valid.labels) as the testing set. The training data (gisette_train) are feature-wisely scaled to [-1,1]. Then the testing data (gisette_valid) are scaled based on the same scaling factors for the training data. These two scaled data sets are used in [GXY11a]
+# of classes: 2
+# of data: 6,000 / 1,000 (testing)
+# of features: 5,000
+Files:
+gisette_scale.bz2
+gisette_scale.t.bz2 (testing)
