@@ -3,10 +3,11 @@ import torch
 
 from models.utils import get_data, train, test
 from models.CNN_1D import CNN_1D
-from models.PCA import PCA_to_ConvLowr, PCA_for_test
+from models.PCA import PCA_to_ConvLowr, PCA_for_test, compute_conv_gini
 def direct_CNN():
     # 这里有个问题，这种getdata的方式太慢了，后面还是给他改喽，数据量也不大，咋这么慢
-    traindata, testdata = get_data()
+    # 获取多种数据集'a1a' 'gisette' 'usps'
+    traindata, testdata = get_data('usps')
     y, x = traindata
     yt, xt = testdata
 
@@ -28,11 +29,21 @@ def direct_CNN():
 
     # 这里变换原输入到卷积低秩的形式
     is_lowr = False
+    is_gini = False
     if is_lowr:
         # 这里是分别做了生成矩阵和变换，联合起来做可能效果更好？感觉应该联合起来做
         # 应该先检查下是否变得低秩了
+        if is_gini:
+            gini_x = compute_conv_gini(x)
+            gini_xt = compute_conv_gini(xt)
         x, A = PCA_to_ConvLowr(x)
         xt = PCA_for_test(xt, A)
+        if is_gini:
+            gini_x_lr = compute_conv_gini(x)
+            gini_xt_lr = compute_conv_gini(xt)
+            print('训练集变换前gini系数为：%.4f 变换后gini系数为：%.4f' % (gini_x, gini_x_lr))
+            print('测试集(用训练集的变换矩阵)变换前gini系数为：%.4f 变换后gini系数为：%.4f' % (gini_xt, gini_xt_lr))
+            return
         # A为列正交没问题
         # I = np.dot(A.T,A)
 

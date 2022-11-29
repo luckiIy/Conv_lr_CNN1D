@@ -7,6 +7,21 @@ from torch.autograd import Variable
 from libsvm.svmutil import *
 from torch.utils import data
 
+def dataset_init(dataset='a1a'):
+    if dataset == 'a1a':
+        train_dir = 'dataset/a1a/train.txt'
+        test_dir = 'dataset/a1a/test.txt'
+    elif dataset == 'gisette':
+        train_dir = 'dataset/gisette/gisette_scale'
+        test_dir = 'dataset/gisette/gisette_scale.t'
+    elif dataset == 'usps':
+        train_dir = 'dataset/usps/usps'
+        test_dir = 'dataset/usps/usps.t'
+    else:
+        print("Dataset was not found")
+    return train_dir, test_dir
+
+
 # 数据集路径
 train_dir = 'dataset/gisette/gisette_scale'
 test_dir = 'dataset/gisette/gisette_scale.t'
@@ -27,10 +42,11 @@ def learning_rate(init, epoch):
     return init*math.pow(0.2, optim_factor)
 
 
-def get_data(train=train_dir, test=test_dir):
+def get_data(dataset='a1a'):
+    train_dir, test_dir = dataset_init(dataset)
     # 因为数据集是从LibSVM拿的直接用它的读取程序
-    y, x = svm_read_problem(train, return_scipy=True)
-    yt, xt = svm_read_problem(test, return_scipy=True)
+    y, x = svm_read_problem(train_dir, return_scipy=True)
+    yt, xt = svm_read_problem(test_dir, return_scipy=True)
     traindata = (y, x)
     testdata = (yt, xt)
     return traindata, testdata
@@ -56,7 +72,7 @@ class CustomDataset(data.Dataset):#需要继承data.Dataset
         return 0
 
 # 单个epoch下train
-def train(model, y, x, epoch, epoch_n, mini_batch, lr=0.1):
+def train(model, y, x, epoch, epoch_n, mini_batch, lr=0.001):
     model.train()
     lr = learning_rate(lr, epoch)
     # 简单归一化，换数据集时别忘记修正

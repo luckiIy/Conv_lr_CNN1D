@@ -72,12 +72,22 @@ def DFT_UV(m):
 
     return np.concatenate((U1, U2), axis=1), np.concatenate((V1, V2), axis=1)
 
+# 计算卷积矩阵秩的基尼系数，这里取前几项算平均
+def compute_conv_gini(x):
+    # x为输入，应为numpy(N,1,F)
+    n = 10
+    feature = torch.squeeze(x)
+    feature = feature[:n].cpu().detach().numpy()
+    gini = 0
+    for i in range(n):
+        conv = conv_matrix(feature[i])
+        _, e, _ = np.linalg.svd(conv)
+        gini += compute_gini(e)
+    gini_avg = gini / n
 
-if __name__ == '__main__':
-    U, V = DFT_UV(5)
-    print("end")
+    return gini_avg
 
-'''
+
 # 定义基尼系数的计算方式
 # 论文里确定矩阵的低秩性用的是奇异值的GINI，这里后面可以详细看看，说不定要改
 def compute_gini(feature):
@@ -90,7 +100,7 @@ def compute_gini(feature):
     f_sum = np.sum(feature)
     feature = np.sort(feature)
     k = np.arange(n) + 1.
-    gini =1. - 2. * np.sum((n + 0.5 - k) / (f_sum * n) * feature)
+    gini = 1. - 2. * np.sum((n + 0.5 - k) / (f_sum * n) * feature)
     return gini
 
 # 一维circshift
@@ -102,15 +112,19 @@ def circshift(x, k):
 # 特征展开为向量得到卷积矩阵,k取-1则按卷积矩阵为方阵输出
 def conv_matrix(feature,k=-1):
     # 输入feature应该是提取到的特征，numpy向量，获得长度，取绝对值变为标准的可measure非负序列
-    n = feature.reshape(-1).shape[0]
+    feature = feature.reshape(-1)
+    n = feature.shape[0]
     if k == -1:
         k = n
-    conv_m = np.zeros((n,k))
+    conv_m = np.zeros((n, k))
     for i in range(k):
         conv_m[:, i] = circshift(feature, i)
     return conv_m
-'''
 
+
+if __name__ == '__main__':
+    U, V = DFT_UV(5)
+    print("end")
 
 # 事实上好像不用搞那种生成矩阵
 # def get_gematrix(x, m):

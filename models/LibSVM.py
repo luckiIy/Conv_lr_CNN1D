@@ -6,7 +6,7 @@ import numpy as np
 from models.utils import get_data
 
 def svm_baseline():
-    traindata, testdata = get_data()
+    traindata, testdata = get_data('usps')
     y, x = traindata
     yt, xt = testdata
     # acc = 0

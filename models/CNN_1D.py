@@ -12,14 +12,16 @@ class CNN_1D(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.dropout = nn.Dropout(p=dropout)
 
-        self.conv1d_1 = nn.Conv1d(in_ch, 4, kernel_size=5, padding=2, padding_mode='circular')
+        self.conv1d_1 = nn.Conv1d(in_ch, 4, kernel_size=51, padding=25, padding_mode='circular')
         self.BN1 = nn.BatchNorm1d(4, affine=True)
-        self.conv1d_2 = nn.Conv1d(4, 2, kernel_size=5, padding=2, padding_mode='circular')
+        self.conv1d_2 = nn.Conv1d(4, 2, kernel_size=51, padding=25, padding_mode='circular')
         self.BN2 = nn.BatchNorm1d(2, affine=True)
-        self.conv1d_3 = nn.Conv1d(2, 4, kernel_size=5, padding=2, padding_mode='circular')
+        self.conv1d_3 = nn.Conv1d(2, 4, kernel_size=51, padding=25, padding_mode='circular')
         self.BN3 = nn.BatchNorm1d(4, affine=True)
-        self.fc1 = nn.Linear(4*feature_n, 50)
-        self.fc2 = nn.Linear(50, 1)
+        self.conv1d_4 = nn.Conv1d(4, 1, kernel_size=51, padding=25, padding_mode='circular')
+        self.BN4 = nn.BatchNorm1d(1, affine=True)
+        self.fc1 = nn.Linear(1*feature_n, 1)
+
 
 
     def forward(self, x):
@@ -30,12 +32,13 @@ class CNN_1D(nn.Module):
         x = self.BN2(x)
         x = self.relu(x)
         x = self.conv1d_3(x)
-        x = self.dropout(x)
         x = self.BN3(x)
+        x = self.relu(x)
+        x = self.conv1d_4(x)
+        x = self.dropout(x)
+        x = self.BN4(x)
         x = self.relu(x)
         x = x.view(x.shape[0], -1)
         x = self.fc1(x)
-        x = self.relu(x)
-        x = self.fc2(x)
         x = self.sigmoid(x)
         return x
