@@ -76,7 +76,7 @@ def train(model, y, x, epoch, epoch_n, mini_batch, lr=0.001):
     model.train()
     lr = learning_rate(lr, epoch)
     # 简单归一化，换数据集时别忘记修正
-    y = (y + 1) / 2
+    # y = (y + 1) / 2
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     # 这里本该随着Dataloader有个mini-batch的，但是由于数据量小,先用这种方式代替
@@ -96,23 +96,23 @@ def train(model, y, x, epoch, epoch_n, mini_batch, lr=0.001):
         loss = criterion(y_b_pred, y_b)
         loss.backward()
         optimizer.step()
-        acc_b += torch.floor(y_b_pred / 0.5).eq(y_b).cpu().sum() / y_b.shape[0]
-        max_p = max(y_b_pred)
-        min_p = min(y_b_pred)
 
-    print('用于检验训练错误，输出pred的最大值:%5f与最小值%5f' % (max_p, min_p))
+        _, y_b_pred_number = torch.max(y_b_pred.data, 1)
+        _, y_b_number = torch.max(y_b.data, 1)
+        acc_b += y_b_pred_number.eq(y_b_number).cpu().sum() / y_b.shape[0]
+
     acc = acc_b / batch_idx
     return loss.data, acc, lr
 
 
 def test(model, yt, xt):
     model.eval()
-    yt = (yt + 1) / 2
 
     yt, xt = yt.cuda(), xt.cuda()
     yt, xt = Variable(yt), Variable(xt)
     yt_pred = model(xt)
     loss_t = criterion(yt_pred, yt)
-    acc_t = torch.floor(yt_pred / 0.5).eq(yt).cpu().sum() / yt.shape[0]
-
+    _, y_t_pred_number = torch.max(yt_pred.data, 1)
+    _, y_t_number = torch.max(yt.data, 1)
+    acc_t = y_t_pred_number.eq(y_t_number).cpu().sum() / yt.shape[0]
     return loss_t.data, acc_t

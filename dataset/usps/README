@@ -1,0 +1,8 @@
+usps
+Source: [JJH94a]
+# of classes: 10
+# of data: 7,291 / 2,007 (testing)
+# of features: 256
+Files:
+usps.bz2
+usps.t.bz2 (testing)

@@ -11,6 +11,7 @@ class CNN_1D(nn.Module):
         self.relu = nn.ReLU(inplace=True)
         self.sigmoid = nn.Sigmoid()
         self.dropout = nn.Dropout(p=dropout)
+        self.softmax = nn.Softmax(dim=1)
 
         self.conv1d_1 = nn.Conv1d(in_ch, 4, kernel_size=51, padding=25, padding_mode='circular')
         self.BN1 = nn.BatchNorm1d(4, affine=True)
@@ -20,7 +21,7 @@ class CNN_1D(nn.Module):
         self.BN3 = nn.BatchNorm1d(4, affine=True)
         self.conv1d_4 = nn.Conv1d(4, 1, kernel_size=51, padding=25, padding_mode='circular')
         self.BN4 = nn.BatchNorm1d(1, affine=True)
-        self.fc1 = nn.Linear(1*feature_n, 1)
+        self.fc1 = nn.Linear(1*feature_n, 10)
 
 
 
@@ -40,5 +41,5 @@ class CNN_1D(nn.Module):
         x = self.relu(x)
         x = x.view(x.shape[0], -1)
         x = self.fc1(x)
-        x = self.sigmoid(x)
+        x = self.softmax(x)
         return x
