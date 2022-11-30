@@ -34,7 +34,7 @@ def direct_CNN():
     targets_t_one_hot = F.one_hot(targets_t.to(torch.int64) % 10).to(torch.float32)
 
     # 这里变换原输入到卷积低秩的形式
-    is_lowr = False
+    is_lowr = True
     is_gini = False
     if is_lowr:
         # 这里是分别做了生成矩阵和变换，联合起来做可能效果更好？感觉应该联合起来做
