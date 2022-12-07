@@ -40,6 +40,10 @@ def learn_A_by_PCA(Y):
     # Y为F特征数*N样本数，也即是原本的样本
     # numpy内置SVD产生的V无需转置，U*sigma*V = 原矩阵
     UY, sigma, VY = np.linalg.svd(Y)
+    # 这里暂时引入一个输出sigma奇异值看看
+
+
+
     # c = U.dot(np.diag(sigma)).dot(V)
     # 这里修改到不补0的版本
     # zero_mm = np.zeros((UY.shape))
@@ -123,8 +127,10 @@ def conv_matrix(feature,k=-1):
 
 
 if __name__ == '__main__':
-    U, V = DFT_UV(5)
-    print("end")
+    # U, V = DFT_UV(5)
+    test_gini = np.array([1, 2, 3, 4, 5])
+    gini = compute_gini(test_gini)
+    print(gini)
 
 # 事实上好像不用搞那种生成矩阵
 # def get_gematrix(x, m):

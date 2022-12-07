@@ -1,0 +1,11 @@
+dna
+Source: Statlog / Dna
+Preprocessing: Training data is further separated into two sets, tr and val. [CWH01a]
+# of classes: 3
+# of data: 2,000 / 1,186 (testing) / 1,400 (tr) / 600 (val)
+# of features: 180
+Files:
+dna.scale
+dna.scale.t (testing)
+dna.scale.tr (tr)
+dna.scale.val (val)

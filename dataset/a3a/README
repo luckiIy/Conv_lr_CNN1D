@@ -1,0 +1,9 @@
+a3a
+Source: UCI / Adult
+Preprocessing: The same as a1a. [JP98a]
+# of classes: 2
+# of data: 3,185 / 29,376 (testing)
+# of features: 123 / 123 (testing)
+Files:
+a3a
+a3a.t (testing)

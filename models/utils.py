@@ -11,20 +11,33 @@ def dataset_init(dataset='a1a'):
     if dataset == 'a1a':
         train_dir = 'dataset/a1a/train.txt'
         test_dir = 'dataset/a1a/test.txt'
+    elif dataset == 'a3a':
+        train_dir = 'dataset/a3a/a3a'
+        test_dir = 'dataset/a3a/a3a.t'
     elif dataset == 'gisette':
         train_dir = 'dataset/gisette/gisette_scale'
         test_dir = 'dataset/gisette/gisette_scale.t'
     elif dataset == 'usps':
         train_dir = 'dataset/usps/usps'
         test_dir = 'dataset/usps/usps.t'
+    elif dataset == 'dna':
+        train_dir = 'dataset/dna/dna.scale'
+        test_dir = 'dataset/dna/dna.scale.t'
+    elif dataset == 'satimage':
+        train_dir = 'dataset/satimage/satimage.scale'
+        test_dir = 'dataset/satimage/satimage.scale.t'
+    elif dataset == 'news20':
+        train_dir = 'dataset/news20/news20'
+        test_dir = 'dataset/news20/news20.t'
+
     else:
         print("Dataset was not found")
     return train_dir, test_dir
 
 
 # 数据集路径
-train_dir = 'dataset/gisette/gisette_scale'
-test_dir = 'dataset/gisette/gisette_scale.t'
+# train_dir = 'dataset/gisette/gisette_scale'
+# test_dir = 'dataset/gisette/gisette_scale.t'
 # train_dir = 'dataset/a1a/train.txt'
 # test_dir = 'dataset/a1a/test.txt'
 # 损失测试了交叉熵BCE和差方和MSE，基本无区别
@@ -33,13 +46,13 @@ criterion = nn.MSELoss()
 def learning_rate(init, epoch):
     # 随epoch增加到一定程度降低lr
     optim_factor = 0
-    if(epoch > 1000):
+    if(epoch > 1200):
         optim_factor = 3
-    elif(epoch > 600):
+    elif(epoch > 800):
         optim_factor = 2
-    elif(epoch > 200):
+    elif(epoch > 400):
         optim_factor = 1
-    return init*math.pow(0.2, optim_factor)
+    return init*math.pow(0.4, optim_factor)
 
 
 def get_data(dataset='a1a'):
@@ -74,10 +87,10 @@ class CustomDataset(data.Dataset):#需要继承data.Dataset
 # 单个epoch下train
 def train(model, y, x, epoch, epoch_n, mini_batch, lr=0.001):
     model.train()
-    lr = learning_rate(lr, epoch)
+    lr_now = learning_rate(lr, epoch)
     # 简单归一化，换数据集时别忘记修正
     # y = (y + 1) / 2
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr_now)
 
     # 这里本该随着Dataloader有个mini-batch的，但是由于数据量小,先用这种方式代替
     batch_idx = x.shape[0] // mini_batch + 1
@@ -102,7 +115,7 @@ def train(model, y, x, epoch, epoch_n, mini_batch, lr=0.001):
         acc_b += y_b_pred_number.eq(y_b_number).cpu().sum() / y_b.shape[0]
 
     acc = acc_b / batch_idx
-    return loss.data, acc, lr
+    return loss.data, acc, lr_now
 
 
 def test(model, yt, xt):

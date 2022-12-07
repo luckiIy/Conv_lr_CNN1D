@@ -1,0 +1,11 @@
+satimage
+Source: Statlog / Satimage
+Preprocessing: Training data is further separated into two sets, tr and val. [CWH01a]
+# of classes: 6
+# of data: 4,435 / 2,000 (testing) / 3,104 (tr) / 1,331 (val)
+# of features: 36
+Files:
+satimage.scale
+satimage.scale.t (testing)
+satimage.scale.tr (tr)
+satimage.scale.val (val)

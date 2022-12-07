@@ -1,0 +1,11 @@
+news20
+Source: [KL95a]
+Preprocessing: First 80/20 training/testing split. Also see this page [JR01a]
+# of classes: 20
+# of data: 15,935 / 3,993 (testing)
+# of features: 62,061 / 62,060 (testing)
+Files:
+news20.bz2
+news20.t.bz2 (testing)
+news20.scale.bz2 (scaled to binary encoding; then unit length for each instance)
+news20.t.scale.bz2 (testing) (scaled to binary encoding; then unit length for each instance)
